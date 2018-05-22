@@ -1,0 +1,128 @@
+{
+  "name": "tap-ts-starter",
+  "version": "0.0.0",
+  "description": "This is a [Singer](https://singer.io) tap built with TypeScript/javascript that runs in Node and produces JSON-formatted data following the [Singer spec](https://github.com/singer-io/getting-started/blob/master/SPEC.md), and most of the spec is reflected in [tap-types.ts](./src/tap-types.ts).",
+  "keywords": [],
+  "main": "dist/tap-ts-starter.cjs.js",
+  "module": "dist/tap-ts-starter.es5.js",
+  "typings": "dist/types/tap-ts-starter.d.ts",
+  "files": [
+    "dist"
+  ],
+  "author": "Peter Lambert <peterl@sbcotton.com>",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "lint": "tslint -t codeFrame 'src/**/*.ts' 'test/**/*.ts'",
+    "prebuild": "rimraf dist",
+    "build": "tsc && tsc --module commonjs --outDir dist/lib && rollup -c rollup.config.ts && npm run build-docs-tap && npm run build-docs-aws",
+    "start": "tsc -w & rollup -c rollup.config.ts -w",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:prod": "npm run lint && npm run test -- --coverage --no-cache",
+    "deploy-docs": "ts-node tools/gh-pages-publish",
+    "report-coverage": "cat ./coverage/lcov.info | coveralls",
+    "commit": "git-cz",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post",
+    "semantic-release-prepare": "ts-node tools/semantic-release-prepare",
+    "precommit": "lint-staged",
+    "build-default-docs": "typedoc --out dist/docs --target es6 --theme minimal --mode file src",
+    "build-docs-tap": "typedoc --mode modules --out dist/docs-tap src/tap-ts-starter.ts --target es6",
+    "build-docs-aws": "typedoc --mode modules --out dist/docs-aws src/handler.ts --target es6",
+    "run-rollup": "node dist/tap-ts-starter.cjs --config testdata/emails.tap-config.json"
+  },
+  "lint-staged": {
+    "{src,test}/**/*.ts": [
+      "prettier --write --no-semi --single-quote",
+      "git add"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-conventional-changelog"
+    },
+    "validate-commit-msg": {
+      "types": "conventional-commit-types",
+      "helpMessage": "Use \"npm run commit\" instead, we use conventional-changelog format :) (https://github.com/commitizen/cz-cli)"
+    }
+  },
+  "jest": {
+    "transform": {
+      ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "coveragePathIgnorePatterns": [
+      "/node_modules/",
+      "/test/"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 90,
+        "functions": 95,
+        "lines": 95,
+        "statements": 95
+      }
+    },
+    "collectCoverage": true,
+    "mapCoverage": true
+  },
+  "devDependencies": {
+    "@types/jest": "^21.1.10",
+    "@types/node": "^8.10.15",
+    "aws-sdk": "^2.241.1",
+    "colors": "^1.2.5",
+    "commitizen": "^2.9.6",
+    "coveralls": "^3.0.1",
+    "cross-env": "^5.1.5",
+    "cz-conventional-changelog": "^2.1.0",
+    "husky": "^0.14.0",
+    "jest": "^21.2.1",
+    "lint-staged": "^6.1.1",
+    "lodash.camelcase": "^4.3.0",
+    "prettier": "^1.12.1",
+    "prompt": "^1.0.0",
+    "replace-in-file": "^3.4.0",
+    "rimraf": "^2.6.1",
+    "rollup": "^0.52.0",
+    "rollup-plugin-commonjs": "^8.4.1",
+    "rollup-plugin-json": "^2.3.1",
+    "rollup-plugin-node-resolve": "^3.3.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-typescript": "^0.8.1",
+    "semantic-release": "^8.2.3",
+    "ts-jest": "^22.4.6",
+    "ts-node": "^4.1.0",
+    "tslint": "^5.10.0",
+    "tslint-config-prettier": "^1.12.0",
+    "tslint-config-standard": "^7.0.0",
+    "typedoc": "^0.9.0",
+    "typescript": "^2.8.3",
+    "validate-commit-msg": "^2.12.2"
+  },
+  "dependencies": {
+    "@types/fs-extra": "^5.0.2",
+    "@types/mailparser": "^2.0.2",
+    "convert-csv-to-json": "0.0.13",
+    "csv": "^3.1.0",
+    "csv-parse": "^2.4.0",
+    "csv-parser": "^1.12.1",
+    "csvtojson": "^2.0.0",
+    "fs-extra": "^5.0.0",
+    "generate-schema": "^2.6.0",
+    "mailparser": "^2.2.0"
+  },
+  "directories": {
+    "test": "test"
+  }
+}
