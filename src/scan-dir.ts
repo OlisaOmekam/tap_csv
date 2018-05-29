@@ -7,6 +7,8 @@
 /** fs-extra is a promise-enabled superset of the standard fs package */
 import * as fse from 'fs-extra'
 import * as tapTypes from './tap-types'
+var csv = require('csv-parser')
+var fs = require('fs')
 
 /** generate json-schemas for our records, if needed */
 var generateSchema = require('generate-schema') // typescript types aren't available so we load javascript-style instead of using typescript's import
@@ -24,7 +26,9 @@ export function scanDir(configObjs: any, parser: any) {
   let catalog = configObjs.catalog
   // TODO: allow schema(s) to be passed in in config
   let schema: any = null
-
+    // fs.createReadStream("/home/ollie/Documents/Internship2018/tap-ts-starter-master/testdata/emails/FL_insurance_sample.csv")
+//   .pipe(csv())
+//   .on('data', function (data) {
   return fse
     .readdir(config.target_folder)
     .then(function(filelist) {
@@ -32,14 +36,16 @@ export function scanDir(configObjs: any, parser: any) {
         // return an array of promises, one per filename, for Promise.all to run asynchronously
         filelist.map(function(filename, idx) {
           return fse
-            .readFile(config.target_folder + '/' + filelist[idx])
+            .readFile(config.target_folder + '/' + filelist[idx])// change to FL_insurance
             .then(function(buffer) {
               // the parsing is done here
+              
               return parser(buffer)
             })
         })
       )
     })
+
     .then(function(parsedObjs) {
       if (parsedObjs.length == 0) return null
 
