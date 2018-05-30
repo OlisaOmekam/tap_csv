@@ -1,6 +1,6 @@
 /**
  * A "scanner" scans a resource collection, parsing the items it finds using the parser passed in  (see the [spec](https://github.com/singer-io/getting-started/blob/master/SPEC.md))
- * 
+ *
  * In this case, we are scanning a directory and parsing the files inside.
  */ /** hack for https://github.com/TypeStrong/typedoc/issues/603 */
 
@@ -17,8 +17,8 @@ var generateSchema = require('generate-schema') // typescript types aren't avail
  * Scan a folder, running parser on each file it finds
  * - TODO: implement configObjs.state and configObjs.catalog, which are just stubs for now
  * - TODO: use interfaces instead of "any" here
- * @param configObjs 
- * @param parser 
+ * @param configObjs
+ * @param parser
  */
 export function scanDir(configObjs: any, parser: any) {
   let config = configObjs.config
@@ -26,9 +26,7 @@ export function scanDir(configObjs: any, parser: any) {
   let catalog = configObjs.catalog
   // TODO: allow schema(s) to be passed in in config
   let schema: any = null
-    // fs.createReadStream("/home/ollie/Documents/Internship2018/tap-ts-starter-master/testdata/emails/FL_insurance_sample.csv")
-//   .pipe(csv())
-//   .on('data', function (data) {
+
   return fse
     .readdir(config.target_folder)
     .then(function(filelist) {
@@ -36,10 +34,10 @@ export function scanDir(configObjs: any, parser: any) {
         // return an array of promises, one per filename, for Promise.all to run asynchronously
         filelist.map(function(filename, idx) {
           return fse
-            .readFile(config.target_folder + '/' + filelist[idx])// change to FL_insurance
+            .readFile(config.target_folder + '/' + filelist[idx]) // change to FL_insurance
             .then(function(buffer) {
               // the parsing is done here
-              
+
               return parser(buffer)
             })
         })
